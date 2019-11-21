@@ -1,4 +1,4 @@
-
+#include "display_handler.h"
 
 #define  DS1621_W			0x90
 #define  DS1621_R			0x91

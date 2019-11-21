@@ -7,12 +7,9 @@
 //			www.dharmanitech.com
 //Date:			Sep 2008
 //**************************************************************
-
-#include <iom8v.h>
-#include <macros.h>
 #include "ds1621.h"
 #include "i2c_routines.h"
-#include "3310_routines.h"
+#include <string.h>
 
 unsigned char tempDisplay[] = "+xx.x";
 
@@ -26,35 +23,36 @@ void ds1621_init()
   errorStatus = i2c_start();
    if(errorStatus == 1)
    {
-     LCD_writeString_F("i2c start failed..");
+     strcpy(display, "LLLL");
    	 i2c_stop();
-	 return;
+  	 return;
    } 
    
    errorStatus = i2c_sendAddress(DS1621_W);
    
    if(errorStatus == 1)
    {
-     LCD_writeString_F("ds1621 sendAddress failed..");
-	 i2c_stop();
-	 return;
+     strcpy(display, "LLLL");
+  	 i2c_stop();
+  	 return;
    } 
    
    errorStatus = i2c_sendData(ACCESS_CONFIG);
    if(errorStatus == 1)
    {
-     LCD_writeString_F("EEPROM write-2 failed..");
-	 i2c_stop();
-	 return;
+     strcpy(display, "LLLL");
+  	 i2c_stop();
+  	 return;
    } 
    
    errorStatus = i2c_sendData(0x03);   //commmand to set o/ppolarity high, single shot conversion
    if(errorStatus == 1)
    {
-     LCD_writeString_F("EEPROM write-2 failed..");
-	 i2c_stop();
+     strcpy(display, "LLLL");
+  	 i2c_stop();
 	 return;
    } 
+
    i2c_stop();
 }
 
@@ -68,7 +66,7 @@ void ds1621_sendCommand(unsigned char command)
   errorStatus = i2c_start();
    if(errorStatus == 1)
    {
-     LCD_writeString_F("i2c start failed..");
+     strcpy(display, "LLLL");
    	 i2c_stop();
 	 return;
    } 
@@ -77,7 +75,7 @@ void ds1621_sendCommand(unsigned char command)
    
    if(errorStatus == 1)
    {
-     LCD_writeString_F("ds1621 sendAddress failed..");
+     strcpy(display, "LLLL");
 	 i2c_stop();
 	 return;
    } 
@@ -85,7 +83,7 @@ void ds1621_sendCommand(unsigned char command)
    errorStatus = i2c_sendData(command);
    if(errorStatus == 1)
    {
-     LCD_writeString_F("EEPROM write-2 failed..");
+     strcpy(display, "LLLL");
 	 i2c_stop();
 	 return;
    } 
@@ -104,7 +102,7 @@ unsigned char ds1621_readValue(unsigned char value)
   errorStatus = i2c_start();
    if(errorStatus == 1)
    {
-     LCD_writeString_F("RTC start1 failed..");
+     strcpy(display, "LLLL");
    	 i2c_stop();
 	 return (0);
    } 
@@ -113,7 +111,7 @@ unsigned char ds1621_readValue(unsigned char value)
    
    if(errorStatus == 1)
    {
-     LCD_writeString_F("ds1621 sendAddress1 failed..");
+     strcpy(display, "LLLL");
 	 i2c_stop();
 	 return (0);
    } 
@@ -121,7 +119,7 @@ unsigned char ds1621_readValue(unsigned char value)
    errorStatus = i2c_sendData(value);
    if(errorStatus == 1)
    {
-     LCD_writeString_F("ds1621 write failed..");
+     strcpy(display, "LLLL");
 	 i2c_stop();
 	 return (0);
    } 
@@ -129,7 +127,7 @@ unsigned char ds1621_readValue(unsigned char value)
     errorStatus = i2c_repeatStart();
    if(errorStatus == 1)
    {
-     LCD_writeString_F("ds1621 repeat start failed..");
+     strcpy(display, "LLLL");
    	 i2c_stop();
 	 return (0);
    } 
@@ -138,7 +136,7 @@ unsigned char ds1621_readValue(unsigned char value)
    
    if(errorStatus == 1)
    {
-     LCD_writeString_F("ds1621 sendAddress2 failed..");
+     strcpy(display, "LLLL");
 	 i2c_stop();
 	 return (0);
    } 
@@ -161,7 +159,7 @@ unsigned char* getTemperature(void)
   
   ds1621_sendCommand ( START_CONVERT );
   
-  delay_ms(1000);
+  _delay_ms(1000);
   
   temperature = ds1621_readValue ( READ_TEMP );
   counter = ds1621_readValue ( READ_COUNTER );

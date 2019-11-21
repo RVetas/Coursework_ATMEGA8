@@ -9,7 +9,6 @@
 //**************************************************************
 
 #include <avr/io.h>
-// #include <macros.h>
 #include "i2c_routines.h"
 //*************************************************
 // Function to start i2c communication
