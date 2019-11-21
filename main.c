@@ -1,5 +1,5 @@
 #include "display_handler.h"
-#include <string.h>
+#include "ds1621.h"
 #include "button_handler.h"
 #include "i2c_routines.h"
 #include <avr/io.h>
@@ -19,6 +19,9 @@ void set_up_ports(void) {
   // Перевод PD5,6,7 на чтение для последующей обработки кнопок
   DDRD &= ~((1 << PD5)| (1 << PD6) | (1 << PD7)); 
   PORTD |= (1 << PD5) | (1 << PD6) | (1 << PD7);
+
+  // Настройка i2c. PC4,5 на вывод.
+  DDRC |= (1 << PC4) | (1 << PC5);
 } 
 
 //Обработчик прерывания переполнения таймера
@@ -47,18 +50,24 @@ void handle_buttons(void) {
   };
 }
 
-
 //Инициализация таймера
 void timer_init() {
 	TIMSK |= (1 << TOIE0);
 	TCCR0 = (1 << CS01);
 }
 
-int main(void) {
-	set_up_ports();
-  timer_init();
-	sei(); //Глобальное разрешение прерываний
+void init() {
+  cli();
 
+  set_up_ports();
+  timer_init();
+
+  sei();
+}
+
+int main(void) {
+  init();
+  
 	while(1) {
     handle_buttons();
 		_delay_ms(1);

@@ -23,7 +23,7 @@ void ds1621_init()
   errorStatus = i2c_start();
    if(errorStatus == 1)
    {
-     strcpy(display, "LLLL");
+     strcpy(display, "5555");
    	 i2c_stop();
   	 return;
    } 
@@ -32,7 +32,7 @@ void ds1621_init()
    
    if(errorStatus == 1)
    {
-     strcpy(display, "LLLL");
+     strcpy(display, "5555");
   	 i2c_stop();
   	 return;
    } 
@@ -40,7 +40,7 @@ void ds1621_init()
    errorStatus = i2c_sendData(ACCESS_CONFIG);
    if(errorStatus == 1)
    {
-     strcpy(display, "LLLL");
+     strcpy(display, "5555");
   	 i2c_stop();
   	 return;
    } 
@@ -48,7 +48,7 @@ void ds1621_init()
    errorStatus = i2c_sendData(0x03);   //commmand to set o/ppolarity high, single shot conversion
    if(errorStatus == 1)
    {
-     strcpy(display, "LLLL");
+     strcpy(display, "5555");
   	 i2c_stop();
 	 return;
    } 
@@ -66,7 +66,7 @@ void ds1621_sendCommand(unsigned char command)
   errorStatus = i2c_start();
    if(errorStatus == 1)
    {
-     strcpy(display, "LLLL");
+     strcpy(display, "5555");
    	 i2c_stop();
 	 return;
    } 
@@ -75,7 +75,7 @@ void ds1621_sendCommand(unsigned char command)
    
    if(errorStatus == 1)
    {
-     strcpy(display, "LLLL");
+     strcpy(display, "5555");
 	 i2c_stop();
 	 return;
    } 
@@ -83,7 +83,7 @@ void ds1621_sendCommand(unsigned char command)
    errorStatus = i2c_sendData(command);
    if(errorStatus == 1)
    {
-     strcpy(display, "LLLL");
+     strcpy(display, "5555");
 	 i2c_stop();
 	 return;
    } 
@@ -102,7 +102,7 @@ unsigned char ds1621_readValue(unsigned char value)
   errorStatus = i2c_start();
    if(errorStatus == 1)
    {
-     strcpy(display, "LLLL");
+     strcpy(display, "5555");
    	 i2c_stop();
 	 return (0);
    } 
@@ -111,7 +111,7 @@ unsigned char ds1621_readValue(unsigned char value)
    
    if(errorStatus == 1)
    {
-     strcpy(display, "LLLL");
+     strcpy(display, "5555");
 	 i2c_stop();
 	 return (0);
    } 
@@ -119,7 +119,7 @@ unsigned char ds1621_readValue(unsigned char value)
    errorStatus = i2c_sendData(value);
    if(errorStatus == 1)
    {
-     strcpy(display, "LLLL");
+     strcpy(display, "5555");
 	 i2c_stop();
 	 return (0);
    } 
@@ -127,7 +127,7 @@ unsigned char ds1621_readValue(unsigned char value)
     errorStatus = i2c_repeatStart();
    if(errorStatus == 1)
    {
-     strcpy(display, "LLLL");
+     strcpy(display, "5555");
    	 i2c_stop();
 	 return (0);
    } 
@@ -136,7 +136,7 @@ unsigned char ds1621_readValue(unsigned char value)
    
    if(errorStatus == 1)
    {
-     strcpy(display, "LLLL");
+     strcpy(display, "5555");
 	 i2c_stop();
 	 return (0);
    } 
