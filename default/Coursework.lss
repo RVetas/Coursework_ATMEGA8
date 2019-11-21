@@ -1,0 +1,780 @@
+
+Coursework.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         000003a2  00000000  00000000  00000074  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         00000094  00800060  000003a2  00000416  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .stab         000006cc  00000000  00000000  000004ac  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  3 .stabstr      00000085  00000000  00000000  00000b78  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  4 .debug_aranges 00000060  00000000  00000000  00000bfd  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .debug_pubnames 000000e0  00000000  00000000  00000c5d  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_info   00000656  00000000  00000000  00000d3d  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_abbrev 000003d7  00000000  00000000  00001393  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_line   000006b5  00000000  00000000  0000176a  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_frame  000000c0  00000000  00000000  00001e20  2**2
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_str    000001cf  00000000  00000000  00001ee0  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_loc    0000049c  00000000  00000000  000020af  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 12 .debug_pubtypes 0000008e  00000000  00000000  0000254b  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 13 .debug_ranges 00000180  00000000  00000000  000025d9  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	12 c0       	rjmp	.+36     	; 0x26 <__ctors_end>
+   2:	24 c0       	rjmp	.+72     	; 0x4c <__bad_interrupt>
+   4:	23 c0       	rjmp	.+70     	; 0x4c <__bad_interrupt>
+   6:	22 c0       	rjmp	.+68     	; 0x4c <__bad_interrupt>
+   8:	21 c0       	rjmp	.+66     	; 0x4c <__bad_interrupt>
+   a:	20 c0       	rjmp	.+64     	; 0x4c <__bad_interrupt>
+   c:	1f c0       	rjmp	.+62     	; 0x4c <__bad_interrupt>
+   e:	1e c0       	rjmp	.+60     	; 0x4c <__bad_interrupt>
+  10:	1d c0       	rjmp	.+58     	; 0x4c <__bad_interrupt>
+  12:	2b c0       	rjmp	.+86     	; 0x6a <__vector_9>
+  14:	1b c0       	rjmp	.+54     	; 0x4c <__bad_interrupt>
+  16:	1a c0       	rjmp	.+52     	; 0x4c <__bad_interrupt>
+  18:	19 c0       	rjmp	.+50     	; 0x4c <__bad_interrupt>
+  1a:	18 c0       	rjmp	.+48     	; 0x4c <__bad_interrupt>
+  1c:	17 c0       	rjmp	.+46     	; 0x4c <__bad_interrupt>
+  1e:	16 c0       	rjmp	.+44     	; 0x4c <__bad_interrupt>
+  20:	15 c0       	rjmp	.+42     	; 0x4c <__bad_interrupt>
+  22:	14 c0       	rjmp	.+40     	; 0x4c <__bad_interrupt>
+  24:	13 c0       	rjmp	.+38     	; 0x4c <__bad_interrupt>
+
+00000026 <__ctors_end>:
+  26:	11 24       	eor	r1, r1
+  28:	1f be       	out	0x3f, r1	; 63
+  2a:	cf e5       	ldi	r28, 0x5F	; 95
+  2c:	d4 e0       	ldi	r29, 0x04	; 4
+  2e:	de bf       	out	0x3e, r29	; 62
+  30:	cd bf       	out	0x3d, r28	; 61
+
+00000032 <__do_copy_data>:
+  32:	10 e0       	ldi	r17, 0x00	; 0
+  34:	a0 e6       	ldi	r26, 0x60	; 96
+  36:	b0 e0       	ldi	r27, 0x00	; 0
+  38:	e2 ea       	ldi	r30, 0xA2	; 162
+  3a:	f3 e0       	ldi	r31, 0x03	; 3
+  3c:	02 c0       	rjmp	.+4      	; 0x42 <__SREG__+0x3>
+  3e:	05 90       	lpm	r0, Z+
+  40:	0d 92       	st	X+, r0
+  42:	a4 3f       	cpi	r26, 0xF4	; 244
+  44:	b1 07       	cpc	r27, r17
+  46:	d9 f7       	brne	.-10     	; 0x3e <__SP_H__>
+  48:	61 d0       	rcall	.+194    	; 0x10c <main>
+  4a:	a9 c1       	rjmp	.+850    	; 0x39e <_exit>
+
+0000004c <__bad_interrupt>:
+  4c:	d9 cf       	rjmp	.-78     	; 0x0 <__vectors>
+
+0000004e <set_up_ports>:
+#include <avr/interrupt.h>
+
+//Настройка портов
+void set_up_ports(void) {
+  //Эти пины настроены на вывод. Вывод идет на A,B,C,D,E,F 7-сегментного индикатора
+	DDRB |= (1<<PB0) | (1<<PB1) | (1<<PB2) | (1<< PB3) | (1<<PB4) | (1<<PB5);
+  4e:	87 b3       	in	r24, 0x17	; 23
+  50:	8f 63       	ori	r24, 0x3F	; 63
+  52:	87 bb       	out	0x17, r24	; 23
+  //Этот пин служит для вывода G на 7-сегментный индикатор
+  DDRD |= (1<<PD3);
+  54:	8b 9a       	sbi	0x11, 3	; 17
+  //Эти пины служат для выбора одного из четырех 7-сегментных индикаторов
+	DDRC |= (1<<PC0) | (1<<PC1) | (1<<PC2) | (1<<PC3);
+  56:	84 b3       	in	r24, 0x14	; 20
+  58:	8f 60       	ori	r24, 0x0F	; 15
+  5a:	84 bb       	out	0x14, r24	; 20
+
+  // Перевод PD5,6,7 на чтение для последующей обработки кнопок
+  DDRD &= ~((1 << PD5)| (1 << PD6) | (1 << PD7)); 
+  5c:	81 b3       	in	r24, 0x11	; 17
+  5e:	8f 71       	andi	r24, 0x1F	; 31
+  60:	81 bb       	out	0x11, r24	; 17
+  PORTD |= (1 << PD5) | (1 << PD6) | (1 << PD7);
+  62:	82 b3       	in	r24, 0x12	; 18
+  64:	80 6e       	ori	r24, 0xE0	; 224
+  66:	82 bb       	out	0x12, r24	; 18
+} 
+  68:	08 95       	ret
+
+0000006a <__vector_9>:
+
+//Обработчик прерывания переполнения таймера
+ISR(TIMER0_OVF_vect) {
+  6a:	1f 92       	push	r1
+  6c:	0f 92       	push	r0
+  6e:	0f b6       	in	r0, 0x3f	; 63
+  70:	0f 92       	push	r0
+  72:	11 24       	eor	r1, r1
+  74:	2f 93       	push	r18
+  76:	3f 93       	push	r19
+  78:	4f 93       	push	r20
+  7a:	5f 93       	push	r21
+  7c:	6f 93       	push	r22
+  7e:	7f 93       	push	r23
+  80:	8f 93       	push	r24
+  82:	9f 93       	push	r25
+  84:	af 93       	push	r26
+  86:	bf 93       	push	r27
+  88:	ef 93       	push	r30
+  8a:	ff 93       	push	r31
+	printDisplay(display);
+  8c:	8f e6       	ldi	r24, 0x6F	; 111
+  8e:	90 e0       	ldi	r25, 0x00	; 0
+  90:	cd d0       	rcall	.+410    	; 0x22c <printDisplay>
+}
+  92:	ff 91       	pop	r31
+  94:	ef 91       	pop	r30
+  96:	bf 91       	pop	r27
+  98:	af 91       	pop	r26
+  9a:	9f 91       	pop	r25
+  9c:	8f 91       	pop	r24
+  9e:	7f 91       	pop	r23
+  a0:	6f 91       	pop	r22
+  a2:	5f 91       	pop	r21
+  a4:	4f 91       	pop	r20
+  a6:	3f 91       	pop	r19
+  a8:	2f 91       	pop	r18
+  aa:	0f 90       	pop	r0
+  ac:	0f be       	out	0x3f, r0	; 63
+  ae:	0f 90       	pop	r0
+  b0:	1f 90       	pop	r1
+  b2:	18 95       	reti
+
+000000b4 <handle_buttons>:
+
+void handle_buttons(void) {
+  unsigned char button_number = number_key_pressed();
+  b4:	63 d1       	rcall	.+710    	; 0x37c <number_key_pressed>
+
+  switch (button_number) {
+  b6:	81 30       	cpi	r24, 0x01	; 1
+  b8:	c9 f0       	breq	.+50     	; 0xec <handle_buttons+0x38>
+  ba:	81 30       	cpi	r24, 0x01	; 1
+  bc:	50 f4       	brcc	.+20     	; 0xd2 <handle_buttons+0x1e>
+    case 0:
+    strcpy(display, "0000");
+  be:	af e6       	ldi	r26, 0x6F	; 111
+  c0:	b0 e0       	ldi	r27, 0x00	; 0
+  c2:	e0 e6       	ldi	r30, 0x60	; 96
+  c4:	f0 e0       	ldi	r31, 0x00	; 0
+  c6:	85 e0       	ldi	r24, 0x05	; 5
+  c8:	01 90       	ld	r0, Z+
+  ca:	0d 92       	st	X+, r0
+  cc:	81 50       	subi	r24, 0x01	; 1
+  ce:	e1 f7       	brne	.-8      	; 0xc8 <handle_buttons+0x14>
+  d0:	08 95       	ret
+}
+
+void handle_buttons(void) {
+  unsigned char button_number = number_key_pressed();
+
+  switch (button_number) {
+  d2:	82 30       	cpi	r24, 0x02	; 2
+  d4:	09 f0       	breq	.+2      	; 0xd8 <handle_buttons+0x24>
+  d6:	08 95       	ret
+    case 1:
+    strcpy(display, "1111");
+    break;
+
+    case 2:
+    strcpy(display, "2222");
+  d8:	af e6       	ldi	r26, 0x6F	; 111
+  da:	b0 e0       	ldi	r27, 0x00	; 0
+  dc:	ea e6       	ldi	r30, 0x6A	; 106
+  de:	f0 e0       	ldi	r31, 0x00	; 0
+  e0:	85 e0       	ldi	r24, 0x05	; 5
+  e2:	01 90       	ld	r0, Z+
+  e4:	0d 92       	st	X+, r0
+  e6:	81 50       	subi	r24, 0x01	; 1
+  e8:	e1 f7       	brne	.-8      	; 0xe2 <handle_buttons+0x2e>
+  ea:	08 95       	ret
+    case 0:
+    strcpy(display, "0000");
+    break;
+
+    case 1:
+    strcpy(display, "1111");
+  ec:	af e6       	ldi	r26, 0x6F	; 111
+  ee:	b0 e0       	ldi	r27, 0x00	; 0
+  f0:	e5 e6       	ldi	r30, 0x65	; 101
+  f2:	f0 e0       	ldi	r31, 0x00	; 0
+  f4:	85 e0       	ldi	r24, 0x05	; 5
+  f6:	01 90       	ld	r0, Z+
+  f8:	0d 92       	st	X+, r0
+  fa:	81 50       	subi	r24, 0x01	; 1
+  fc:	e1 f7       	brne	.-8      	; 0xf6 <handle_buttons+0x42>
+  fe:	08 95       	ret
+
+00000100 <timer_init>:
+}
+
+
+//Инициализация таймера
+void timer_init() {
+	TIMSK |= (1 << TOIE0);
+ 100:	89 b7       	in	r24, 0x39	; 57
+ 102:	81 60       	ori	r24, 0x01	; 1
+ 104:	89 bf       	out	0x39, r24	; 57
+	TCCR0 = (1 << CS01);
+ 106:	82 e0       	ldi	r24, 0x02	; 2
+ 108:	83 bf       	out	0x33, r24	; 51
+}
+ 10a:	08 95       	ret
+
+0000010c <main>:
+#include <avr/interrupt.h>
+
+//Настройка портов
+void set_up_ports(void) {
+  //Эти пины настроены на вывод. Вывод идет на A,B,C,D,E,F 7-сегментного индикатора
+	DDRB |= (1<<PB0) | (1<<PB1) | (1<<PB2) | (1<< PB3) | (1<<PB4) | (1<<PB5);
+ 10c:	87 b3       	in	r24, 0x17	; 23
+ 10e:	8f 63       	ori	r24, 0x3F	; 63
+ 110:	87 bb       	out	0x17, r24	; 23
+  //Этот пин служит для вывода G на 7-сегментный индикатор
+  DDRD |= (1<<PD3);
+ 112:	8b 9a       	sbi	0x11, 3	; 17
+  //Эти пины служат для выбора одного из четырех 7-сегментных индикаторов
+	DDRC |= (1<<PC0) | (1<<PC1) | (1<<PC2) | (1<<PC3);
+ 114:	84 b3       	in	r24, 0x14	; 20
+ 116:	8f 60       	ori	r24, 0x0F	; 15
+ 118:	84 bb       	out	0x14, r24	; 20
+
+  // Перевод PD5,6,7 на чтение для последующей обработки кнопок
+  DDRD &= ~((1 << PD5)| (1 << PD6) | (1 << PD7)); 
+ 11a:	81 b3       	in	r24, 0x11	; 17
+ 11c:	8f 71       	andi	r24, 0x1F	; 31
+ 11e:	81 bb       	out	0x11, r24	; 17
+  PORTD |= (1 << PD5) | (1 << PD6) | (1 << PD7);
+ 120:	82 b3       	in	r24, 0x12	; 18
+ 122:	80 6e       	ori	r24, 0xE0	; 224
+ 124:	82 bb       	out	0x12, r24	; 18
+}
+
+
+//Инициализация таймера
+void timer_init() {
+	TIMSK |= (1 << TOIE0);
+ 126:	89 b7       	in	r24, 0x39	; 57
+ 128:	81 60       	ori	r24, 0x01	; 1
+ 12a:	89 bf       	out	0x39, r24	; 57
+	TCCR0 = (1 << CS01);
+ 12c:	82 e0       	ldi	r24, 0x02	; 2
+ 12e:	83 bf       	out	0x33, r24	; 51
+}
+
+int main(void) {
+	set_up_ports();
+  timer_init();
+	sei(); //Глобальное разрешение прерываний
+ 130:	78 94       	sei
+ISR(TIMER0_OVF_vect) {
+	printDisplay(display);
+}
+
+void handle_buttons(void) {
+  unsigned char button_number = number_key_pressed();
+ 132:	24 d1       	rcall	.+584    	; 0x37c <number_key_pressed>
+
+  switch (button_number) {
+ 134:	81 30       	cpi	r24, 0x01	; 1
+ 136:	a1 f0       	breq	.+40     	; 0x160 <main+0x54>
+ 138:	81 30       	cpi	r24, 0x01	; 1
+ 13a:	10 f5       	brcc	.+68     	; 0x180 <main+0x74>
+    case 0:
+    strcpy(display, "0000");
+ 13c:	af e6       	ldi	r26, 0x6F	; 111
+ 13e:	b0 e0       	ldi	r27, 0x00	; 0
+ 140:	e0 e6       	ldi	r30, 0x60	; 96
+ 142:	f0 e0       	ldi	r31, 0x00	; 0
+ 144:	85 e0       	ldi	r24, 0x05	; 5
+ 146:	01 90       	ld	r0, Z+
+ 148:	0d 92       	st	X+, r0
+ 14a:	81 50       	subi	r24, 0x01	; 1
+ 14c:	e1 f7       	brne	.-8      	; 0x146 <main+0x3a>
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
+ 14e:	87 ee       	ldi	r24, 0xE7	; 231
+ 150:	93 e0       	ldi	r25, 0x03	; 3
+ 152:	01 97       	sbiw	r24, 0x01	; 1
+ 154:	f1 f7       	brne	.-4      	; 0x152 <main+0x46>
+ 156:	00 c0       	rjmp	.+0      	; 0x158 <main+0x4c>
+ 158:	00 00       	nop
+ISR(TIMER0_OVF_vect) {
+	printDisplay(display);
+}
+
+void handle_buttons(void) {
+  unsigned char button_number = number_key_pressed();
+ 15a:	10 d1       	rcall	.+544    	; 0x37c <number_key_pressed>
+
+  switch (button_number) {
+ 15c:	81 30       	cpi	r24, 0x01	; 1
+ 15e:	61 f7       	brne	.-40     	; 0x138 <main+0x2c>
+    case 0:
+    strcpy(display, "0000");
+    break;
+
+    case 1:
+    strcpy(display, "1111");
+ 160:	af e6       	ldi	r26, 0x6F	; 111
+ 162:	b0 e0       	ldi	r27, 0x00	; 0
+ 164:	e5 e6       	ldi	r30, 0x65	; 101
+ 166:	f0 e0       	ldi	r31, 0x00	; 0
+ 168:	85 e0       	ldi	r24, 0x05	; 5
+ 16a:	01 90       	ld	r0, Z+
+ 16c:	0d 92       	st	X+, r0
+ 16e:	81 50       	subi	r24, 0x01	; 1
+ 170:	e1 f7       	brne	.-8      	; 0x16a <main+0x5e>
+ 172:	87 ee       	ldi	r24, 0xE7	; 231
+ 174:	93 e0       	ldi	r25, 0x03	; 3
+ 176:	01 97       	sbiw	r24, 0x01	; 1
+ 178:	f1 f7       	brne	.-4      	; 0x176 <main+0x6a>
+ 17a:	00 c0       	rjmp	.+0      	; 0x17c <main+0x70>
+ 17c:	00 00       	nop
+ 17e:	ed cf       	rjmp	.-38     	; 0x15a <main+0x4e>
+}
+
+void handle_buttons(void) {
+  unsigned char button_number = number_key_pressed();
+
+  switch (button_number) {
+ 180:	82 30       	cpi	r24, 0x02	; 2
+ 182:	29 f7       	brne	.-54     	; 0x14e <main+0x42>
+    case 1:
+    strcpy(display, "1111");
+    break;
+
+    case 2:
+    strcpy(display, "2222");
+ 184:	af e6       	ldi	r26, 0x6F	; 111
+ 186:	b0 e0       	ldi	r27, 0x00	; 0
+ 188:	ea e6       	ldi	r30, 0x6A	; 106
+ 18a:	f0 e0       	ldi	r31, 0x00	; 0
+ 18c:	85 e0       	ldi	r24, 0x05	; 5
+ 18e:	01 90       	ld	r0, Z+
+ 190:	0d 92       	st	X+, r0
+ 192:	81 50       	subi	r24, 0x01	; 1
+ 194:	e1 f7       	brne	.-8      	; 0x18e <main+0x82>
+ 196:	87 ee       	ldi	r24, 0xE7	; 231
+ 198:	93 e0       	ldi	r25, 0x03	; 3
+ 19a:	01 97       	sbiw	r24, 0x01	; 1
+ 19c:	f1 f7       	brne	.-4      	; 0x19a <main+0x8e>
+ 19e:	00 c0       	rjmp	.+0      	; 0x1a0 <main+0x94>
+ 1a0:	00 00       	nop
+ 1a2:	db cf       	rjmp	.-74     	; 0x15a <main+0x4e>
+
+000001a4 <char_to_code>:
+#include "display_handler.h"
+
+char display[] = "    ";
+
+unsigned int char_to_code(char symbol) {
+ 1a4:	80 52       	subi	r24, 0x20	; 32
+ 1a6:	80 34       	cpi	r24, 0x40	; 64
+ 1a8:	50 f4       	brcc	.+20     	; 0x1be <char_to_code+0x1a>
+ 1aa:	e8 2f       	mov	r30, r24
+ 1ac:	f0 e0       	ldi	r31, 0x00	; 0
+ 1ae:	ee 0f       	add	r30, r30
+ 1b0:	ff 1f       	adc	r31, r31
+ 1b2:	ec 58       	subi	r30, 0x8C	; 140
+ 1b4:	ff 4f       	sbci	r31, 0xFF	; 255
+ 1b6:	20 81       	ld	r18, Z
+ 1b8:	31 81       	ldd	r19, Z+1	; 0x01
+            break;
+        default:
+            code = 0xff;
+    };
+    return code;
+}
+ 1ba:	c9 01       	movw	r24, r18
+ 1bc:	08 95       	ret
+#include "display_handler.h"
+
+char display[] = "    ";
+
+unsigned int char_to_code(char symbol) {
+ 1be:	2f ef       	ldi	r18, 0xFF	; 255
+ 1c0:	30 e0       	ldi	r19, 0x00	; 0
+            break;
+        default:
+            code = 0xff;
+    };
+    return code;
+}
+ 1c2:	c9 01       	movw	r24, r18
+ 1c4:	08 95       	ret
+
+000001c6 <send_digit_to_display>:
+
+void send_digit_to_display(unsigned int number, char digit) {
+ 1c6:	60 52       	subi	r22, 0x20	; 32
+ 1c8:	60 34       	cpi	r22, 0x40	; 64
+ 1ca:	68 f5       	brcc	.+90     	; 0x226 <send_digit_to_display+0x60>
+ 1cc:	e6 2f       	mov	r30, r22
+ 1ce:	f0 e0       	ldi	r31, 0x00	; 0
+ 1d0:	ee 0f       	add	r30, r30
+ 1d2:	ff 1f       	adc	r31, r31
+ 1d4:	ec 58       	subi	r30, 0x8C	; 140
+ 1d6:	ff 4f       	sbci	r31, 0xFF	; 255
+ 1d8:	20 81       	ld	r18, Z
+ 1da:	31 81       	ldd	r19, Z+1	; 0x01
+ 1dc:	52 2f       	mov	r21, r18
+ 1de:	36 95       	lsr	r19
+ 1e0:	27 95       	ror	r18
+ 1e2:	36 95       	lsr	r19
+ 1e4:	27 95       	ror	r18
+ 1e6:	36 95       	lsr	r19
+ 1e8:	27 95       	ror	r18
+ 1ea:	42 2f       	mov	r20, r18
+ 1ec:	47 6f       	ori	r20, 0xF7	; 247
+    unsigned int displayDigit = char_to_code(digit);
+    PORTB |= (1<<PB0) | (1<<PB1) | (1<<PB2) | (1<< PB3) | (1<<PB4) | (1<<PB5);//clr data pin
+ 1ee:	98 b3       	in	r25, 0x18	; 24
+ 1f0:	9f 63       	ori	r25, 0x3F	; 63
+ 1f2:	98 bb       	out	0x18, r25	; 24
+    PORTD |= (1<<PD3);// clr data pin
+ 1f4:	93 9a       	sbi	0x12, 3	; 18
+    
+    PORTC &= ~((1<<PC0) | (1<<PC1) | (1<<PC2) | (1<< PC3));// clr addr
+ 1f6:	95 b3       	in	r25, 0x15	; 21
+ 1f8:	90 7f       	andi	r25, 0xF0	; 240
+ 1fa:	95 bb       	out	0x15, r25	; 21
+    PORTC |= (1 << number); // set addr
+ 1fc:	95 b3       	in	r25, 0x15	; 21
+ 1fe:	21 e0       	ldi	r18, 0x01	; 1
+ 200:	30 e0       	ldi	r19, 0x00	; 0
+ 202:	02 c0       	rjmp	.+4      	; 0x208 <send_digit_to_display+0x42>
+ 204:	22 0f       	add	r18, r18
+ 206:	33 1f       	adc	r19, r19
+ 208:	8a 95       	dec	r24
+ 20a:	e2 f7       	brpl	.-8      	; 0x204 <send_digit_to_display+0x3e>
+ 20c:	92 2b       	or	r25, r18
+ 20e:	95 bb       	out	0x15, r25	; 21
+    
+    PORTB = displayDigit; // set data1
+ 210:	58 bb       	out	0x18, r21	; 24
+    PORTD &= ~((1<<PD3) & (~(displayDigit>>3))); // set data2
+ 212:	82 b3       	in	r24, 0x12	; 18
+ 214:	84 23       	and	r24, r20
+ 216:	82 bb       	out	0x12, r24	; 18
+ 218:	87 ee       	ldi	r24, 0xE7	; 231
+ 21a:	93 e0       	ldi	r25, 0x03	; 3
+ 21c:	01 97       	sbiw	r24, 0x01	; 1
+ 21e:	f1 f7       	brne	.-4      	; 0x21c <send_digit_to_display+0x56>
+ 220:	00 c0       	rjmp	.+0      	; 0x222 <send_digit_to_display+0x5c>
+ 222:	00 00       	nop
+    _delay_ms(1);
+}
+ 224:	08 95       	ret
+ 226:	4f ef       	ldi	r20, 0xFF	; 255
+ 228:	5f ef       	ldi	r21, 0xFF	; 255
+ 22a:	e1 cf       	rjmp	.-62     	; 0x1ee <send_digit_to_display+0x28>
+
+0000022c <printDisplay>:
+
+void printDisplay() {
+ 22c:	e0 91 6f 00 	lds	r30, 0x006F
+ 230:	e0 52       	subi	r30, 0x20	; 32
+ 232:	e0 34       	cpi	r30, 0x40	; 64
+ 234:	08 f0       	brcs	.+2      	; 0x238 <printDisplay+0xc>
+ 236:	96 c0       	rjmp	.+300    	; 0x364 <printDisplay+0x138>
+ 238:	f0 e0       	ldi	r31, 0x00	; 0
+ 23a:	ee 0f       	add	r30, r30
+ 23c:	ff 1f       	adc	r31, r31
+ 23e:	ec 58       	subi	r30, 0x8C	; 140
+ 240:	ff 4f       	sbci	r31, 0xFF	; 255
+ 242:	80 81       	ld	r24, Z
+ 244:	91 81       	ldd	r25, Z+1	; 0x01
+ 246:	28 2f       	mov	r18, r24
+ 248:	96 95       	lsr	r25
+ 24a:	87 95       	ror	r24
+ 24c:	96 95       	lsr	r25
+ 24e:	87 95       	ror	r24
+ 250:	96 95       	lsr	r25
+ 252:	87 95       	ror	r24
+ 254:	87 6f       	ori	r24, 0xF7	; 247
+    return code;
+}
+
+void send_digit_to_display(unsigned int number, char digit) {
+    unsigned int displayDigit = char_to_code(digit);
+    PORTB |= (1<<PB0) | (1<<PB1) | (1<<PB2) | (1<< PB3) | (1<<PB4) | (1<<PB5);//clr data pin
+ 256:	98 b3       	in	r25, 0x18	; 24
+ 258:	9f 63       	ori	r25, 0x3F	; 63
+ 25a:	98 bb       	out	0x18, r25	; 24
+    PORTD |= (1<<PD3);// clr data pin
+ 25c:	93 9a       	sbi	0x12, 3	; 18
+    
+    PORTC &= ~((1<<PC0) | (1<<PC1) | (1<<PC2) | (1<< PC3));// clr addr
+ 25e:	95 b3       	in	r25, 0x15	; 21
+ 260:	90 7f       	andi	r25, 0xF0	; 240
+ 262:	95 bb       	out	0x15, r25	; 21
+    PORTC |= (1 << number); // set addr
+ 264:	a8 9a       	sbi	0x15, 0	; 21
+    
+    PORTB = displayDigit; // set data1
+ 266:	28 bb       	out	0x18, r18	; 24
+    PORTD &= ~((1<<PD3) & (~(displayDigit>>3))); // set data2
+ 268:	92 b3       	in	r25, 0x12	; 18
+ 26a:	98 23       	and	r25, r24
+ 26c:	92 bb       	out	0x12, r25	; 18
+ 26e:	87 ee       	ldi	r24, 0xE7	; 231
+ 270:	93 e0       	ldi	r25, 0x03	; 3
+ 272:	01 97       	sbiw	r24, 0x01	; 1
+ 274:	f1 f7       	brne	.-4      	; 0x272 <printDisplay+0x46>
+ 276:	00 c0       	rjmp	.+0      	; 0x278 <printDisplay+0x4c>
+ 278:	00 00       	nop
+ 27a:	e0 91 70 00 	lds	r30, 0x0070
+ 27e:	e0 52       	subi	r30, 0x20	; 32
+ 280:	e0 34       	cpi	r30, 0x40	; 64
+ 282:	08 f0       	brcs	.+2      	; 0x286 <printDisplay+0x5a>
+ 284:	78 c0       	rjmp	.+240    	; 0x376 <printDisplay+0x14a>
+ 286:	f0 e0       	ldi	r31, 0x00	; 0
+ 288:	ee 0f       	add	r30, r30
+ 28a:	ff 1f       	adc	r31, r31
+ 28c:	ec 58       	subi	r30, 0x8C	; 140
+ 28e:	ff 4f       	sbci	r31, 0xFF	; 255
+ 290:	80 81       	ld	r24, Z
+ 292:	91 81       	ldd	r25, Z+1	; 0x01
+ 294:	28 2f       	mov	r18, r24
+ 296:	96 95       	lsr	r25
+ 298:	87 95       	ror	r24
+ 29a:	96 95       	lsr	r25
+ 29c:	87 95       	ror	r24
+ 29e:	96 95       	lsr	r25
+ 2a0:	87 95       	ror	r24
+ 2a2:	87 6f       	ori	r24, 0xF7	; 247
+    return code;
+}
+
+void send_digit_to_display(unsigned int number, char digit) {
+    unsigned int displayDigit = char_to_code(digit);
+    PORTB |= (1<<PB0) | (1<<PB1) | (1<<PB2) | (1<< PB3) | (1<<PB4) | (1<<PB5);//clr data pin
+ 2a4:	98 b3       	in	r25, 0x18	; 24
+ 2a6:	9f 63       	ori	r25, 0x3F	; 63
+ 2a8:	98 bb       	out	0x18, r25	; 24
+    PORTD |= (1<<PD3);// clr data pin
+ 2aa:	93 9a       	sbi	0x12, 3	; 18
+    
+    PORTC &= ~((1<<PC0) | (1<<PC1) | (1<<PC2) | (1<< PC3));// clr addr
+ 2ac:	95 b3       	in	r25, 0x15	; 21
+ 2ae:	90 7f       	andi	r25, 0xF0	; 240
+ 2b0:	95 bb       	out	0x15, r25	; 21
+    PORTC |= (1 << number); // set addr
+ 2b2:	a9 9a       	sbi	0x15, 1	; 21
+    
+    PORTB = displayDigit; // set data1
+ 2b4:	28 bb       	out	0x18, r18	; 24
+    PORTD &= ~((1<<PD3) & (~(displayDigit>>3))); // set data2
+ 2b6:	92 b3       	in	r25, 0x12	; 18
+ 2b8:	98 23       	and	r25, r24
+ 2ba:	92 bb       	out	0x12, r25	; 18
+ 2bc:	87 ee       	ldi	r24, 0xE7	; 231
+ 2be:	93 e0       	ldi	r25, 0x03	; 3
+ 2c0:	01 97       	sbiw	r24, 0x01	; 1
+ 2c2:	f1 f7       	brne	.-4      	; 0x2c0 <printDisplay+0x94>
+ 2c4:	00 c0       	rjmp	.+0      	; 0x2c6 <printDisplay+0x9a>
+ 2c6:	00 00       	nop
+ 2c8:	e0 91 71 00 	lds	r30, 0x0071
+ 2cc:	e0 52       	subi	r30, 0x20	; 32
+ 2ce:	e0 34       	cpi	r30, 0x40	; 64
+ 2d0:	08 f0       	brcs	.+2      	; 0x2d4 <printDisplay+0xa8>
+ 2d2:	4e c0       	rjmp	.+156    	; 0x370 <printDisplay+0x144>
+ 2d4:	f0 e0       	ldi	r31, 0x00	; 0
+ 2d6:	ee 0f       	add	r30, r30
+ 2d8:	ff 1f       	adc	r31, r31
+ 2da:	ec 58       	subi	r30, 0x8C	; 140
+ 2dc:	ff 4f       	sbci	r31, 0xFF	; 255
+ 2de:	80 81       	ld	r24, Z
+ 2e0:	91 81       	ldd	r25, Z+1	; 0x01
+ 2e2:	28 2f       	mov	r18, r24
+ 2e4:	96 95       	lsr	r25
+ 2e6:	87 95       	ror	r24
+ 2e8:	96 95       	lsr	r25
+ 2ea:	87 95       	ror	r24
+ 2ec:	96 95       	lsr	r25
+ 2ee:	87 95       	ror	r24
+ 2f0:	87 6f       	ori	r24, 0xF7	; 247
+    return code;
+}
+
+void send_digit_to_display(unsigned int number, char digit) {
+    unsigned int displayDigit = char_to_code(digit);
+    PORTB |= (1<<PB0) | (1<<PB1) | (1<<PB2) | (1<< PB3) | (1<<PB4) | (1<<PB5);//clr data pin
+ 2f2:	98 b3       	in	r25, 0x18	; 24
+ 2f4:	9f 63       	ori	r25, 0x3F	; 63
+ 2f6:	98 bb       	out	0x18, r25	; 24
+    PORTD |= (1<<PD3);// clr data pin
+ 2f8:	93 9a       	sbi	0x12, 3	; 18
+    
+    PORTC &= ~((1<<PC0) | (1<<PC1) | (1<<PC2) | (1<< PC3));// clr addr
+ 2fa:	95 b3       	in	r25, 0x15	; 21
+ 2fc:	90 7f       	andi	r25, 0xF0	; 240
+ 2fe:	95 bb       	out	0x15, r25	; 21
+    PORTC |= (1 << number); // set addr
+ 300:	aa 9a       	sbi	0x15, 2	; 21
+    
+    PORTB = displayDigit; // set data1
+ 302:	28 bb       	out	0x18, r18	; 24
+    PORTD &= ~((1<<PD3) & (~(displayDigit>>3))); // set data2
+ 304:	92 b3       	in	r25, 0x12	; 18
+ 306:	98 23       	and	r25, r24
+ 308:	92 bb       	out	0x12, r25	; 18
+ 30a:	87 ee       	ldi	r24, 0xE7	; 231
+ 30c:	93 e0       	ldi	r25, 0x03	; 3
+ 30e:	01 97       	sbiw	r24, 0x01	; 1
+ 310:	f1 f7       	brne	.-4      	; 0x30e <printDisplay+0xe2>
+ 312:	00 c0       	rjmp	.+0      	; 0x314 <printDisplay+0xe8>
+ 314:	00 00       	nop
+ 316:	e0 91 72 00 	lds	r30, 0x0072
+ 31a:	e0 52       	subi	r30, 0x20	; 32
+ 31c:	e0 34       	cpi	r30, 0x40	; 64
+ 31e:	28 f5       	brcc	.+74     	; 0x36a <printDisplay+0x13e>
+ 320:	f0 e0       	ldi	r31, 0x00	; 0
+ 322:	ee 0f       	add	r30, r30
+ 324:	ff 1f       	adc	r31, r31
+ 326:	ec 58       	subi	r30, 0x8C	; 140
+ 328:	ff 4f       	sbci	r31, 0xFF	; 255
+ 32a:	80 81       	ld	r24, Z
+ 32c:	91 81       	ldd	r25, Z+1	; 0x01
+ 32e:	28 2f       	mov	r18, r24
+ 330:	96 95       	lsr	r25
+ 332:	87 95       	ror	r24
+ 334:	96 95       	lsr	r25
+ 336:	87 95       	ror	r24
+ 338:	96 95       	lsr	r25
+ 33a:	87 95       	ror	r24
+ 33c:	87 6f       	ori	r24, 0xF7	; 247
+    return code;
+}
+
+void send_digit_to_display(unsigned int number, char digit) {
+    unsigned int displayDigit = char_to_code(digit);
+    PORTB |= (1<<PB0) | (1<<PB1) | (1<<PB2) | (1<< PB3) | (1<<PB4) | (1<<PB5);//clr data pin
+ 33e:	98 b3       	in	r25, 0x18	; 24
+ 340:	9f 63       	ori	r25, 0x3F	; 63
+ 342:	98 bb       	out	0x18, r25	; 24
+    PORTD |= (1<<PD3);// clr data pin
+ 344:	93 9a       	sbi	0x12, 3	; 18
+    
+    PORTC &= ~((1<<PC0) | (1<<PC1) | (1<<PC2) | (1<< PC3));// clr addr
+ 346:	95 b3       	in	r25, 0x15	; 21
+ 348:	90 7f       	andi	r25, 0xF0	; 240
+ 34a:	95 bb       	out	0x15, r25	; 21
+    PORTC |= (1 << number); // set addr
+ 34c:	ab 9a       	sbi	0x15, 3	; 21
+    
+    PORTB = displayDigit; // set data1
+ 34e:	28 bb       	out	0x18, r18	; 24
+    PORTD &= ~((1<<PD3) & (~(displayDigit>>3))); // set data2
+ 350:	92 b3       	in	r25, 0x12	; 18
+ 352:	98 23       	and	r25, r24
+ 354:	92 bb       	out	0x12, r25	; 18
+ 356:	87 ee       	ldi	r24, 0xE7	; 231
+ 358:	93 e0       	ldi	r25, 0x03	; 3
+ 35a:	01 97       	sbiw	r24, 0x01	; 1
+ 35c:	f1 f7       	brne	.-4      	; 0x35a <printDisplay+0x12e>
+ 35e:	00 c0       	rjmp	.+0      	; 0x360 <printDisplay+0x134>
+ 360:	00 00       	nop
+
+void printDisplay() {
+    for (short int i = 0; i < 4; ++i) {
+        send_digit_to_display(i, display[i]);
+    }
+}
+ 362:	08 95       	ret
+ 364:	8f ef       	ldi	r24, 0xFF	; 255
+ 366:	2f ef       	ldi	r18, 0xFF	; 255
+ 368:	76 cf       	rjmp	.-276    	; 0x256 <printDisplay+0x2a>
+ 36a:	8f ef       	ldi	r24, 0xFF	; 255
+ 36c:	2f ef       	ldi	r18, 0xFF	; 255
+ 36e:	e7 cf       	rjmp	.-50     	; 0x33e <printDisplay+0x112>
+ 370:	8f ef       	ldi	r24, 0xFF	; 255
+ 372:	2f ef       	ldi	r18, 0xFF	; 255
+ 374:	be cf       	rjmp	.-132    	; 0x2f2 <printDisplay+0xc6>
+ 376:	8f ef       	ldi	r24, 0xFF	; 255
+ 378:	2f ef       	ldi	r18, 0xFF	; 255
+ 37a:	94 cf       	rjmp	.-216    	; 0x2a4 <printDisplay+0x78>
+
+0000037c <number_key_pressed>:
+#include "button_handler.h"
+unsigned char number_key_pressed(void) {
+  unsigned char isButton2 = ((PIND >> (8 - 1)) & 1);
+ 37c:	20 b3       	in	r18, 0x10	; 16
+  unsigned char isButton1 = ((PIND >> (7 - 1)) & 1);
+ 37e:	90 b3       	in	r25, 0x10	; 16
+  unsigned char isButton0 = ((PIND >> (6 - 1)) & 1);
+ 380:	80 b3       	in	r24, 0x10	; 16
+
+  if (!isButton0) {
+ 382:	85 ff       	sbrs	r24, 5
+ 384:	08 c0       	rjmp	.+16     	; 0x396 <number_key_pressed+0x1a>
+    return 0;
+  }
+
+  if (!isButton1) {
+ 386:	96 ff       	sbrs	r25, 6
+ 388:	04 c0       	rjmp	.+8      	; 0x392 <number_key_pressed+0x16>
+    return 1;
+  }
+
+  if (!isButton2) {
+ 38a:	27 ff       	sbrs	r18, 7
+ 38c:	06 c0       	rjmp	.+12     	; 0x39a <number_key_pressed+0x1e>
+    return 2;
+  }
+  return 42;
+ 38e:	8a e2       	ldi	r24, 0x2A	; 42
+}
+ 390:	08 95       	ret
+  if (!isButton0) {
+    return 0;
+  }
+
+  if (!isButton1) {
+    return 1;
+ 392:	81 e0       	ldi	r24, 0x01	; 1
+ 394:	08 95       	ret
+  unsigned char isButton2 = ((PIND >> (8 - 1)) & 1);
+  unsigned char isButton1 = ((PIND >> (7 - 1)) & 1);
+  unsigned char isButton0 = ((PIND >> (6 - 1)) & 1);
+
+  if (!isButton0) {
+    return 0;
+ 396:	80 e0       	ldi	r24, 0x00	; 0
+ 398:	08 95       	ret
+  if (!isButton1) {
+    return 1;
+  }
+
+  if (!isButton2) {
+    return 2;
+ 39a:	82 e0       	ldi	r24, 0x02	; 2
+ 39c:	08 95       	ret
+
+0000039e <_exit>:
+ 39e:	f8 94       	cli
+
+000003a0 <__stop_program>:
+ 3a0:	ff cf       	rjmp	.-2      	; 0x3a0 <__stop_program>

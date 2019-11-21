@@ -50,7 +50,7 @@ unsigned int char_to_code(char symbol) {
         case 'L':
             code = 0b11000111;
             break;
-        case : '':
+        case ' ':
             code = 0b11111111;
             break;
         default:
@@ -62,13 +62,13 @@ unsigned int char_to_code(char symbol) {
 void send_digit_to_display(unsigned int number, char digit) {
     unsigned int displayDigit = char_to_code(digit);
     PORTB |= (1<<PB0) | (1<<PB1) | (1<<PB2) | (1<< PB3) | (1<<PB4) | (1<<PB5);//clr data pin
-    PORTD |= (1<<PD4);// clr data pin
+    PORTD |= (1<<PD3);// clr data pin
     
     PORTC &= ~((1<<PC0) | (1<<PC1) | (1<<PC2) | (1<< PC3));// clr addr
     PORTC |= (1 << number); // set addr
     
     PORTB = displayDigit; // set data1
-    PORTD &= ~((1<<PD4) & (~(displayDigit>>3))); // set data2
+    PORTD &= ~((1<<PD3) & (~(displayDigit>>3))); // set data2
     _delay_ms(1);
 }
 
