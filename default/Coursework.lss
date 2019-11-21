@@ -3,33 +3,33 @@ Coursework.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         000003a2  00000000  00000000  00000074  2**1
+  0 .text         0000045c  00000000  00000000  00000074  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .data         00000094  00800060  000003a2  00000416  2**0
+  1 .data         00000094  00800060  0000045c  000004d0  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  2 .stab         000006cc  00000000  00000000  000004ac  2**2
+  2 .stab         000006cc  00000000  00000000  00000564  2**2
                   CONTENTS, READONLY, DEBUGGING
-  3 .stabstr      00000085  00000000  00000000  00000b78  2**0
+  3 .stabstr      00000085  00000000  00000000  00000c30  2**0
                   CONTENTS, READONLY, DEBUGGING
-  4 .debug_aranges 00000060  00000000  00000000  00000bfd  2**0
+  4 .debug_aranges 00000080  00000000  00000000  00000cb5  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_pubnames 000000e0  00000000  00000000  00000c5d  2**0
+  5 .debug_pubnames 00000177  00000000  00000000  00000d35  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_info   00000656  00000000  00000000  00000d3d  2**0
+  6 .debug_info   0000075a  00000000  00000000  00000eac  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_abbrev 000003d7  00000000  00000000  00001393  2**0
+  7 .debug_abbrev 00000436  00000000  00000000  00001606  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   000006b5  00000000  00000000  0000176a  2**0
+  8 .debug_line   0000092e  00000000  00000000  00001a3c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  000000c0  00000000  00000000  00001e20  2**2
+  9 .debug_frame  00000140  00000000  00000000  0000236c  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    000001cf  00000000  00000000  00001ee0  2**0
+ 10 .debug_str    00000257  00000000  00000000  000024ac  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    0000049c  00000000  00000000  000020af  2**0
+ 11 .debug_loc    000004f1  00000000  00000000  00002703  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_pubtypes 0000008e  00000000  00000000  0000254b  2**0
+ 12 .debug_pubtypes 000000ac  00000000  00000000  00002bf4  2**0
                   CONTENTS, READONLY, DEBUGGING
- 13 .debug_ranges 00000180  00000000  00000000  000025d9  2**0
+ 13 .debug_ranges 00000148  00000000  00000000  00002ca0  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -67,8 +67,8 @@ Disassembly of section .text:
   32:	10 e0       	ldi	r17, 0x00	; 0
   34:	a0 e6       	ldi	r26, 0x60	; 96
   36:	b0 e0       	ldi	r27, 0x00	; 0
-  38:	e2 ea       	ldi	r30, 0xA2	; 162
-  3a:	f3 e0       	ldi	r31, 0x03	; 3
+  38:	ec e5       	ldi	r30, 0x5C	; 92
+  3a:	f4 e0       	ldi	r31, 0x04	; 4
   3c:	02 c0       	rjmp	.+4      	; 0x42 <__SREG__+0x3>
   3e:	05 90       	lpm	r0, Z+
   40:	0d 92       	st	X+, r0
@@ -76,13 +76,13 @@ Disassembly of section .text:
   44:	b1 07       	cpc	r27, r17
   46:	d9 f7       	brne	.-10     	; 0x3e <__SP_H__>
   48:	61 d0       	rcall	.+194    	; 0x10c <main>
-  4a:	a9 c1       	rjmp	.+850    	; 0x39e <_exit>
+  4a:	06 c2       	rjmp	.+1036   	; 0x458 <_exit>
 
 0000004c <__bad_interrupt>:
   4c:	d9 cf       	rjmp	.-78     	; 0x0 <__vectors>
 
 0000004e <set_up_ports>:
-#include <avr/interrupt.h>
+#include <string.h>
 
 //Настройка портов
 void set_up_ports(void) {
@@ -238,7 +238,7 @@ void timer_init() {
  10a:	08 95       	ret
 
 0000010c <main>:
-#include <avr/interrupt.h>
+#include <string.h>
 
 //Настройка портов
 void set_up_ports(void) {
@@ -773,8 +773,280 @@ unsigned char number_key_pressed(void) {
  39a:	82 e0       	ldi	r24, 0x02	; 2
  39c:	08 95       	ret
 
-0000039e <_exit>:
- 39e:	f8 94       	cli
+0000039e <i2c_start>:
+#include "i2c_routines.h"
+//*************************************************
+// Function to start i2c communication
+//*************************************************
+unsigned char i2c_start(void) {
+  TWCR = (1 << TWINT) | (1 << TWSTA) | (1 << TWEN);  // Send START condition
+ 39e:	84 ea       	ldi	r24, 0xA4	; 164
+ 3a0:	86 bf       	out	0x36, r24	; 54
 
-000003a0 <__stop_program>:
- 3a0:	ff cf       	rjmp	.-2      	; 0x3a0 <__stop_program>
+  while (!(TWCR & (1 << TWINT)))
+ 3a2:	06 b6       	in	r0, 0x36	; 54
+ 3a4:	07 fe       	sbrs	r0, 7
+ 3a6:	fd cf       	rjmp	.-6      	; 0x3a2 <i2c_start+0x4>
+    ;  // Wait for TWINT flag set. This indicates that the
+  // START condition has been transmitted
+  if ((TWSR & 0xF8) == START)  // Check value of TWI Status Register
+ 3a8:	91 b1       	in	r25, 0x01	; 1
+ 3aa:	98 7f       	andi	r25, 0xF8	; 248
+    return (0);
+ 3ac:	81 e0       	ldi	r24, 0x01	; 1
+ 3ae:	98 30       	cpi	r25, 0x08	; 8
+ 3b0:	09 f0       	breq	.+2      	; 0x3b4 <i2c_start+0x16>
+  else
+    return (1);
+}
+ 3b2:	08 95       	ret
+
+  while (!(TWCR & (1 << TWINT)))
+    ;  // Wait for TWINT flag set. This indicates that the
+  // START condition has been transmitted
+  if ((TWSR & 0xF8) == START)  // Check value of TWI Status Register
+    return (0);
+ 3b4:	80 e0       	ldi	r24, 0x00	; 0
+  else
+    return (1);
+}
+ 3b6:	08 95       	ret
+
+000003b8 <i2c_repeatStart>:
+
+//*************************************************
+// Function for repeat start condition
+//*************************************************
+unsigned char i2c_repeatStart(void) {
+  TWCR = (1 << TWINT) | (1 << TWSTA) | (1 << TWEN);  // Send START condition
+ 3b8:	84 ea       	ldi	r24, 0xA4	; 164
+ 3ba:	86 bf       	out	0x36, r24	; 54
+  while (!(TWCR & (1 << TWINT)))
+ 3bc:	06 b6       	in	r0, 0x36	; 54
+ 3be:	07 fe       	sbrs	r0, 7
+ 3c0:	fd cf       	rjmp	.-6      	; 0x3bc <i2c_repeatStart+0x4>
+    ;  // Wait for TWINT flag set. This indicates that the
+  // START condition has been transmitted
+  if ((TWSR & 0xF8) == REPEAT_START)  // Check value of TWI Status Register
+ 3c2:	91 b1       	in	r25, 0x01	; 1
+ 3c4:	98 7f       	andi	r25, 0xF8	; 248
+    return (0);
+ 3c6:	81 e0       	ldi	r24, 0x01	; 1
+ 3c8:	90 31       	cpi	r25, 0x10	; 16
+ 3ca:	09 f0       	breq	.+2      	; 0x3ce <i2c_repeatStart+0x16>
+  else
+    return (1);
+}
+ 3cc:	08 95       	ret
+  TWCR = (1 << TWINT) | (1 << TWSTA) | (1 << TWEN);  // Send START condition
+  while (!(TWCR & (1 << TWINT)))
+    ;  // Wait for TWINT flag set. This indicates that the
+  // START condition has been transmitted
+  if ((TWSR & 0xF8) == REPEAT_START)  // Check value of TWI Status Register
+    return (0);
+ 3ce:	80 e0       	ldi	r24, 0x00	; 0
+  else
+    return (1);
+}
+ 3d0:	08 95       	ret
+
+000003d2 <i2c_sendAddress>:
+// Function to transmit address of the slave
+//**************************************************
+unsigned char i2c_sendAddress(unsigned char address) {
+  unsigned char STATUS;
+
+  if ((address & 0x01) == 0)
+ 3d2:	80 ff       	sbrs	r24, 0
+ 3d4:	11 c0       	rjmp	.+34     	; 0x3f8 <i2c_sendAddress+0x26>
+ 3d6:	40 e4       	ldi	r20, 0x40	; 64
+ 3d8:	50 e0       	ldi	r21, 0x00	; 0
+    STATUS = MT_SLA_ACK;
+  else
+    STATUS = MR_SLA_ACK;
+
+  TWDR = address;
+ 3da:	83 b9       	out	0x03, r24	; 3
+  TWCR = (1 << TWINT) |
+ 3dc:	84 e8       	ldi	r24, 0x84	; 132
+ 3de:	86 bf       	out	0x36, r24	; 54
+         (1 << TWEN);  // Load SLA_W into TWDR Register. Clear TWINT bit
+  // in TWCR to start transmission of address
+  while (!(TWCR & (1 << TWINT)))
+ 3e0:	06 b6       	in	r0, 0x36	; 54
+ 3e2:	07 fe       	sbrs	r0, 7
+ 3e4:	fd cf       	rjmp	.-6      	; 0x3e0 <i2c_sendAddress+0xe>
+    ;  // Wait for TWINT flag set. This indicates that the
+  // SLA+W has been transmitted, and
+  // ACK/NACK has been received.
+  if ((TWSR & 0xF8) == STATUS)  // Check value of TWI Status Register
+ 3e6:	21 b1       	in	r18, 0x01	; 1
+ 3e8:	30 e0       	ldi	r19, 0x00	; 0
+ 3ea:	28 7f       	andi	r18, 0xF8	; 248
+ 3ec:	30 70       	andi	r19, 0x00	; 0
+    return (0);
+ 3ee:	81 e0       	ldi	r24, 0x01	; 1
+ 3f0:	24 17       	cp	r18, r20
+ 3f2:	35 07       	cpc	r19, r21
+ 3f4:	21 f0       	breq	.+8      	; 0x3fe <i2c_sendAddress+0x2c>
+  else
+    return (1);
+}
+ 3f6:	08 95       	ret
+// Function to transmit address of the slave
+//**************************************************
+unsigned char i2c_sendAddress(unsigned char address) {
+  unsigned char STATUS;
+
+  if ((address & 0x01) == 0)
+ 3f8:	48 e1       	ldi	r20, 0x18	; 24
+ 3fa:	50 e0       	ldi	r21, 0x00	; 0
+ 3fc:	ee cf       	rjmp	.-36     	; 0x3da <i2c_sendAddress+0x8>
+  while (!(TWCR & (1 << TWINT)))
+    ;  // Wait for TWINT flag set. This indicates that the
+  // SLA+W has been transmitted, and
+  // ACK/NACK has been received.
+  if ((TWSR & 0xF8) == STATUS)  // Check value of TWI Status Register
+    return (0);
+ 3fe:	80 e0       	ldi	r24, 0x00	; 0
+  else
+    return (1);
+}
+ 400:	08 95       	ret
+
+00000402 <i2c_sendData>:
+
+//**************************************************
+// Function to transmit a data byte
+//*************************************************
+unsigned char i2c_sendData(unsigned char data) {
+  TWDR = data;
+ 402:	83 b9       	out	0x03, r24	; 3
+  TWCR = (1 << TWINT) |
+ 404:	84 e8       	ldi	r24, 0x84	; 132
+ 406:	86 bf       	out	0x36, r24	; 54
+         (1 << TWEN);  // Load SLA_W into TWDR Register. Clear TWINT bit
+  // in TWCR to start transmission of data
+  while (!(TWCR & (1 << TWINT)))
+ 408:	06 b6       	in	r0, 0x36	; 54
+ 40a:	07 fe       	sbrs	r0, 7
+ 40c:	fd cf       	rjmp	.-6      	; 0x408 <i2c_sendData+0x6>
+    ;  // Wait for TWINT flag set. This indicates that the
+  // data has been transmitted, and
+  // ACK/NACK has been received.
+  if ((TWSR & 0xF8) != MT_DATA_ACK)  // Check value of TWI Status Register
+ 40e:	91 b1       	in	r25, 0x01	; 1
+ 410:	98 7f       	andi	r25, 0xF8	; 248
+    return (1);
+ 412:	81 e0       	ldi	r24, 0x01	; 1
+ 414:	98 32       	cpi	r25, 0x28	; 40
+ 416:	09 f0       	breq	.+2      	; 0x41a <i2c_sendData+0x18>
+  else
+    return (0);
+}
+ 418:	08 95       	ret
+  while (!(TWCR & (1 << TWINT)))
+    ;  // Wait for TWINT flag set. This indicates that the
+  // data has been transmitted, and
+  // ACK/NACK has been received.
+  if ((TWSR & 0xF8) != MT_DATA_ACK)  // Check value of TWI Status Register
+    return (1);
+ 41a:	80 e0       	ldi	r24, 0x00	; 0
+  else
+    return (0);
+}
+ 41c:	08 95       	ret
+
+0000041e <i2c_receiveData_ACK>:
+// Function to receive a data byte and send ACKnowledge
+//*****************************************************
+unsigned char i2c_receiveData_ACK(void) {
+  unsigned char data;
+
+  TWCR = (1 << TWEA) | (1 << TWINT) | (1 << TWEN);
+ 41e:	84 ec       	ldi	r24, 0xC4	; 196
+ 420:	86 bf       	out	0x36, r24	; 54
+
+  while (!(TWCR & (1 << TWINT)))
+ 422:	06 b6       	in	r0, 0x36	; 54
+ 424:	07 fe       	sbrs	r0, 7
+ 426:	fd cf       	rjmp	.-6      	; 0x422 <i2c_receiveData_ACK+0x4>
+    ;  // Wait for TWINT flag set. This indicates that the
+  // data has been received
+  if ((TWSR & 0xF8) != MR_DATA_ACK)  // Check value of TWI Status Register
+ 428:	81 b1       	in	r24, 0x01	; 1
+ 42a:	88 7f       	andi	r24, 0xF8	; 248
+ 42c:	80 35       	cpi	r24, 0x50	; 80
+ 42e:	11 f0       	breq	.+4      	; 0x434 <i2c_receiveData_ACK+0x16>
+    return (ERROR_CODE);
+ 430:	8e e7       	ldi	r24, 0x7E	; 126
+
+  data = TWDR;
+  return (data);
+}
+ 432:	08 95       	ret
+    ;  // Wait for TWINT flag set. This indicates that the
+  // data has been received
+  if ((TWSR & 0xF8) != MR_DATA_ACK)  // Check value of TWI Status Register
+    return (ERROR_CODE);
+
+  data = TWDR;
+ 434:	83 b1       	in	r24, 0x03	; 3
+  return (data);
+ 436:	08 95       	ret
+
+00000438 <i2c_receiveData_NACK>:
+// Function to receive the last data byte (no acknowledge from master
+//******************************************************************
+unsigned char i2c_receiveData_NACK(void) {
+  unsigned char data;
+
+  TWCR = (1 << TWINT) | (1 << TWEN);
+ 438:	84 e8       	ldi	r24, 0x84	; 132
+ 43a:	86 bf       	out	0x36, r24	; 54
+
+  while (!(TWCR & (1 << TWINT)))
+ 43c:	06 b6       	in	r0, 0x36	; 54
+ 43e:	07 fe       	sbrs	r0, 7
+ 440:	fd cf       	rjmp	.-6      	; 0x43c <i2c_receiveData_NACK+0x4>
+    ;  // Wait for TWINT flag set. This indicates that the
+  // data has been received
+  if ((TWSR & 0xF8) != MR_DATA_NACK)  // Check value of TWI Status Register
+ 442:	81 b1       	in	r24, 0x01	; 1
+ 444:	88 7f       	andi	r24, 0xF8	; 248
+ 446:	88 35       	cpi	r24, 0x58	; 88
+ 448:	11 f0       	breq	.+4      	; 0x44e <i2c_receiveData_NACK+0x16>
+    return (ERROR_CODE);
+ 44a:	8e e7       	ldi	r24, 0x7E	; 126
+
+  data = TWDR;
+  return (data);
+}
+ 44c:	08 95       	ret
+    ;  // Wait for TWINT flag set. This indicates that the
+  // data has been received
+  if ((TWSR & 0xF8) != MR_DATA_NACK)  // Check value of TWI Status Register
+    return (ERROR_CODE);
+
+  data = TWDR;
+ 44e:	83 b1       	in	r24, 0x03	; 3
+  return (data);
+ 450:	08 95       	ret
+
+00000452 <i2c_stop>:
+}
+//**************************************************
+// Function to end the i2c communication
+//*************************************************
+void i2c_stop(void) {
+  TWCR = (1 << TWINT) | (1 << TWEN) | (1 << TWSTO);  // Transmit STOP condition
+ 452:	84 e9       	ldi	r24, 0x94	; 148
+ 454:	86 bf       	out	0x36, r24	; 54
+}
+ 456:	08 95       	ret
+
+00000458 <_exit>:
+ 458:	f8 94       	cli
+
+0000045a <__stop_program>:
+ 45a:	ff cf       	rjmp	.-2      	; 0x45a <__stop_program>

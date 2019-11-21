@@ -1,7 +1,11 @@
 #include "display_handler.h"
+#include <string.h>
+#include "button_handler.h"
+#include "i2c_routines.h"
 #include <avr/io.h>
 #include <util/delay.h>
 #include <avr/interrupt.h>
+#include <string.h>
 
 //Настройка портов
 void set_up_ports(void) {

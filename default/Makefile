@@ -37,7 +37,7 @@ HEX_EEPROM_FLAGS += --change-section-lma .eeprom=0 --no-change-warnings
 
 
 ## Objects that must be built in order to link
-OBJECTS = main.o display_handler.o button_handler.o 
+OBJECTS = main.o display_handler.o button_handler.o i2c_routines.o 
 
 ## Objects explicitly added by the user
 LINKONLYOBJECTS = 
@@ -53,6 +53,9 @@ display_handler.o: ../display_handler.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
 button_handler.o: ../button_handler.c
+	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
+
+i2c_routines.o: ../i2c_routines.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
 ##Link

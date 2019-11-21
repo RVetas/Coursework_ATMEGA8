@@ -8,10 +8,9 @@
 // Date:			Sep 2008
 //**************************************************************
 
-#include <iom8v.h>
-#include <macros.h>
+#include <avr/io.h>
+// #include <macros.h>
 #include "i2c_routines.h"
-#include "3310_routines.h"
 //*************************************************
 // Function to start i2c communication
 //*************************************************
