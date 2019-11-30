@@ -17,8 +17,9 @@ void set_up_ports(void) {
 	DDRC |= (1<<PC0) | (1<<PC1) | (1<<PC2) | (1<<PC3);
 
   // Перевод PD5,6,7 на чтение для последующей обработки кнопок
-  DDRD &= ~((1 << PD5)| (1 << PD6) | (1 << PD7)); 
-  PORTD |= (1 << PD5) | (1 << PD6) | (1 << PD7);
+  // DDRD &= ~((1 << PD5)| (1 << PD6) | (1 << PD7)); 
+  // DDRD |= (1 << PD5) | (1 << PD6) | (1 << PD7);
+  // PORTD |= (1 << PD5) | (1 << PD6) | (1 << PD7);
 
   // Настройка i2c. PC4,5 на вывод.
   DDRC |= (1 << PC4) | (1 << PC5);
@@ -29,8 +30,13 @@ ISR(TIMER0_OVF_vect) {
 	printDisplay(display);
 }
 
-void handle_buttons(void) {
+ISR(INT0_vect) {
   unsigned char button_number = number_key_pressed();
+  handle_buttons(button_number);
+}
+
+void handle_buttons(unsigned char button_number) {
+  // unsigned char button_number = number_key_pressed();
 
   switch (button_number) {
     case 0:
@@ -57,11 +63,12 @@ void timer_init() {
 }
 
 void init() {
-  cli();
-
+  // cli();
   set_up_ports();
   timer_init();
 
+  GICR |= (1 << INT0);
+  MCUCR |= (1 << ISC00) | (1 << ISC01);
   sei();
   // cli();
 }
@@ -69,9 +76,10 @@ void init() {
 int main(void) {
   init();
   ds1621_init();
-
+  DDRD |= (1 << PD5) | (1 << PD6) | (1 << PD7);
+  PORTD |= (1 << PD5) | (1 << PD6) | (1 << PD7);
 	while(1) {
-    handle_buttons();
+    // handle_buttons();
     signed char temp = getTemperature();
 		_delay_ms(1);
 	}
