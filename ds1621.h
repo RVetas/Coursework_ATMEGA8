@@ -1,5 +1,3 @@
-#include "display_handler.h"
-
 #define  DS1621_W			0x90
 #define  DS1621_R			0x91
 
@@ -9,9 +7,9 @@
 #define	 READ_COUNTER		0xA8
 #define	 READ_SLOPE			0xA9
 #define  ACCESS_CONFIG		0xAC
-
+#include <util/delay.h>
 void ds1621_init ( void );
 void ds1621_sendCommand ( unsigned char );
 unsigned char ds1621_readValue ( unsigned char );
-unsigned char* getTemperature ( void );
+signed char getTemperature ( void );
 

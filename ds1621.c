@@ -23,7 +23,6 @@ void ds1621_init()
   errorStatus = i2c_start();
    if(errorStatus == 1)
    {
-     strcpy(display, "5555");
    	 i2c_stop();
   	 return;
    } 
@@ -32,7 +31,6 @@ void ds1621_init()
    
    if(errorStatus == 1)
    {
-     strcpy(display, "5555");
   	 i2c_stop();
   	 return;
    } 
@@ -40,7 +38,6 @@ void ds1621_init()
    errorStatus = i2c_sendData(ACCESS_CONFIG);
    if(errorStatus == 1)
    {
-     strcpy(display, "5555");
   	 i2c_stop();
   	 return;
    } 
@@ -48,7 +45,6 @@ void ds1621_init()
    errorStatus = i2c_sendData(0x03);   //commmand to set o/ppolarity high, single shot conversion
    if(errorStatus == 1)
    {
-     strcpy(display, "5555");
   	 i2c_stop();
 	 return;
    } 
@@ -66,7 +62,6 @@ void ds1621_sendCommand(unsigned char command)
   errorStatus = i2c_start();
    if(errorStatus == 1)
    {
-     strcpy(display, "5555");
    	 i2c_stop();
 	 return;
    } 
@@ -75,7 +70,6 @@ void ds1621_sendCommand(unsigned char command)
    
    if(errorStatus == 1)
    {
-     strcpy(display, "5555");
 	 i2c_stop();
 	 return;
    } 
@@ -83,7 +77,6 @@ void ds1621_sendCommand(unsigned char command)
    errorStatus = i2c_sendData(command);
    if(errorStatus == 1)
    {
-     strcpy(display, "5555");
 	 i2c_stop();
 	 return;
    } 
@@ -102,7 +95,6 @@ unsigned char ds1621_readValue(unsigned char value)
   errorStatus = i2c_start();
    if(errorStatus == 1)
    {
-     strcpy(display, "5555");
    	 i2c_stop();
 	 return (0);
    } 
@@ -111,7 +103,6 @@ unsigned char ds1621_readValue(unsigned char value)
    
    if(errorStatus == 1)
    {
-     strcpy(display, "5555");
 	 i2c_stop();
 	 return (0);
    } 
@@ -119,7 +110,6 @@ unsigned char ds1621_readValue(unsigned char value)
    errorStatus = i2c_sendData(value);
    if(errorStatus == 1)
    {
-     strcpy(display, "5555");
 	 i2c_stop();
 	 return (0);
    } 
@@ -127,7 +117,6 @@ unsigned char ds1621_readValue(unsigned char value)
     errorStatus = i2c_repeatStart();
    if(errorStatus == 1)
    {
-     strcpy(display, "5555");
    	 i2c_stop();
 	 return (0);
    } 
@@ -136,7 +125,6 @@ unsigned char ds1621_readValue(unsigned char value)
    
    if(errorStatus == 1)
    {
-     strcpy(display, "5555");
 	 i2c_stop();
 	 return (0);
    } 
@@ -151,46 +139,11 @@ unsigned char ds1621_readValue(unsigned char value)
 //******************************************************************
 //Function to read 
 //******************************************************************    
-unsigned char* getTemperature(void)
-{
-  char temperature, counter, slope;
-  int temp;
-  float actualTemp;
-  
+signed char getTemperature(void)
+{ 
   ds1621_sendCommand ( START_CONVERT );
   
   _delay_ms(1000);
   
-  temperature = ds1621_readValue ( READ_TEMP );
-  counter = ds1621_readValue ( READ_COUNTER );
-  slope = ds1621_readValue ( READ_SLOPE );   
-  
-  actualTemp = (float)temperature - 0.25 + ((float)(slope - counter) / (float)slope);
-  
- 	temp=(int)(actualTemp * 10.0);   //to include decimal point for display
-	
-	if((actualTemp*10.0 - temp) >= 0.5) temp=temp+1;
-	
-//    tempDisplay[8]=0xdf;			//Symbol of degree
-
-	if(temp < 0)
-	{
-	  tempDisplay[0] = '-';
-	  temp *= -1;
-	}
-	else
-	{
-	  tempDisplay[0] = '+';
-	}     
-	
-	tempDisplay[4] = ((unsigned char)(temp%10)) | 0x30;
-	temp=temp/10;
-	
-	tempDisplay[2] = ((unsigned char)(temp%10)) | 0x30;
-	temp=temp/10;
-	
-	tempDisplay[1] = ((unsigned char)(temp%10)) | 0x30;
-	temp=temp/10;
-	
-	return tempDisplay;
+  return ds1621_readValue ( READ_TEMP );
 }

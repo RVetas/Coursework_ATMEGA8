@@ -53,7 +53,7 @@ void handle_buttons(void) {
 //Инициализация таймера
 void timer_init() {
 	TIMSK |= (1 << TOIE0);
-	TCCR0 = (1 << CS01);
+	TCCR0 = (1 << CS02);
 }
 
 void init() {
@@ -63,13 +63,16 @@ void init() {
   timer_init();
 
   sei();
+  // cli();
 }
 
 int main(void) {
   init();
-  
+  ds1621_init();
+
 	while(1) {
     handle_buttons();
+    signed char temp = getTemperature();
 		_delay_ms(1);
 	}
 	return 0;
