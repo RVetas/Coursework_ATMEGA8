@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes'?>
 <WORKSPACE>
  <FRAME activewindow="0">
-  <PLACEMENT>2c0000000000000001000000ffffffffffffffffffffffffffffffff760000003700000045050000f5020000</PLACEMENT>
+  <PLACEMENT>2c00000000000000010000000083ffff0083ffffffffffffffffffffe9010000b5000000b708000061050000</PLACEMENT>
   <WINDOW type="default" module="ISIS"/>
  </FRAME>
  <MODULE name="VSMDEBUG">
@@ -32,7 +32,7 @@
      <ITEM name="nItems">0</ITEM>
     </PROPERTIES>
    </POPUP>
-   <POPUP w="759" x="106" flags="00008023" y="310" h="413" pid="0" iid="10">
+   <POPUP w="759" x="77" flags="00000022" y="514" h="413" pid="0" iid="10">
     <PROPERTIES>
      <ITEM name="ComboBox1000">S</ITEM>
      <ITEM name="ComboBox1001">Sr</ITEM>
@@ -117,11 +117,19 @@
      <ITEM name="TopLineAddress">00000020</ITEM>
     </PROPERTIES>
    </POPUP>
-   <POPUP w="600" x="347" flags="0000002b" y="470" h="400" pid="1" iid="2">
+   <POPUP w="600" x="419" flags="0000002b" y="901" h="399" pid="1" iid="2">
     <PROPERTIES>
-     <ITEM name="Breakpoint 0">"getTemperature",08F4,0018,D0FC,73DD,-1
+     <ITEM name="Breakpoint 0">"handle_buttons",01FC,000C,5FF0,8D5E,1
 </ITEM>
-     <ITEM name="Breakpoint 1">"getTemperature",09EC,0110,6E55,73DD,-1
+     <ITEM name="Breakpoint 1">"main",02EC,0046,B26A,8D5E,1
+</ITEM>
+     <ITEM name="Breakpoint 2">"main",02F0,004A,11A8,8D5E,1
+</ITEM>
+     <ITEM name="Breakpoint 3">"main",0316,0070,9B8A,8D5E,1
+</ITEM>
+     <ITEM name="Breakpoint 4">"getTemperature",092A,0018,D0FC,73DD,-1
+</ITEM>
+     <ITEM name="Breakpoint 5">"getTemperature",0A22,0110,6E55,73DD,-1
 </ITEM>
      <ITEM name="CaseSensitive">No</ITEM>
      <ITEM name="DISPADDRS">Yes</ITEM>
@@ -129,10 +137,10 @@
      <ITEM name="DISPOPCODES">No</ITEM>
      <ITEM name="FIXUPBPTS">Yes</ITEM>
      <ITEM name="WordsOnly">No</ITEM>
-     <ITEM name="nBreakpoints">2</ITEM>
+     <ITEM name="nBreakpoints">0</ITEM>
     </PROPERTIES>
    </POPUP>
-   <POPUP w="300" x="135" flags="0000000b" y="416" h="247" pid="2" iid="2">
+   <POPUP w="300" x="238" flags="0000000b" y="873" h="247" pid="2" iid="2">
     <PROPERTIES>
      <ITEM name="Address Column Width">96</ITEM>
      <ITEM name="AutoResize">No</ITEM>
@@ -152,7 +160,7 @@
    <POPUP w="40" x="512" flags="00000008" y="409" h="4" pid="1" iid="3">
     <PROPERTIES/>
    </POPUP>
-   <POPUP w="8" x="532" flags="0000000a" y="429" h="16" pid="101" iid="4">
+   <POPUP w="16" x="930" flags="0000000b" y="768" h="16" pid="101" iid="4">
     <PROPERTIES>
      <ITEM name="DataType">2</ITEM>
      <ITEM name="DispChars">Yes</ITEM>

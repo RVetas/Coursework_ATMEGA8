@@ -2,11 +2,21 @@
 #include "ds1621.h"
 #include "button_handler.h"
 #include "i2c_routines.h"
+#include "24c64.h"
 #include <avr/io.h>
 #include <util/delay.h>
 #include <avr/interrupt.h>
 #include <string.h>
 
+enum State {
+  Register = 0, Transmit = 1, TURBO = 2
+};
+enum State state = Register;
+
+int timer1_divider = 0; //timer1 divider
+unsigned int address = 0; // eeprom start address
+int timer_temp_divider = 0;
+int should_update_temp = 1;
 //Настройка портов
 void set_up_ports(void) {
   //Эти пины настроены на вывод. Вывод идет на A,B,C,D,E,F 7-сегментного индикатора
@@ -15,12 +25,6 @@ void set_up_ports(void) {
   DDRD |= (1<<PD3);
   //Эти пины служат для выбора одного из четырех 7-сегментных индикаторов
 	DDRC |= (1<<PC0) | (1<<PC1) | (1<<PC2) | (1<<PC3);
-
-  // Перевод PD5,6,7 на чтение для последующей обработки кнопок
-  // DDRD &= ~((1 << PD5)| (1 << PD6) | (1 << PD7)); 
-  // DDRD |= (1 << PD5) | (1 << PD6) | (1 << PD7);
-  // PORTD |= (1 << PD5) | (1 << PD6) | (1 << PD7);
-
   // Настройка i2c. PC4,5 на вывод.
   DDRC |= (1 << PC4) | (1 << PC5);
 } 
@@ -30,9 +34,25 @@ ISR(TIMER0_OVF_vect) {
 	printDisplay(display);
 }
 
-ISR(INT0_vect) {
-  unsigned char button_number = number_key_pressed();
-  handle_buttons(button_number);
+ISR(TIMER1_OVF_vect) {
+  if (state == Register) {
+    //Если значение timer1_divider меньше 56, то 15 минут еще не прошло
+    if (timer1_divider < 56) {
+      timer1_divider++;
+    } else {
+      //Значение timer1_divider достигло 56 => настало время записать данные в EEPROM
+      signed char temp = getTemperature();
+      EEWriteByte(address, temp);
+      timer1_divider = 0;
+    }
+  }
+
+  if (timer_temp_divider < 4) {
+    timer_temp_divider++;
+  } else {
+    should_update_temp = 1;
+    timer_temp_divider = 0;
+  }
 }
 
 void handle_buttons(unsigned char button_number) {
@@ -41,14 +61,17 @@ void handle_buttons(unsigned char button_number) {
   switch (button_number) {
     case 0:
     strcpy(display, "0000");
+    state = Register;
     break;
 
     case 1:
     strcpy(display, "1111");
+    state = Transmit;
     break;
 
     case 2:
     strcpy(display, "2222");
+    state = TURBO;
     break;
 
     default:
@@ -56,10 +79,17 @@ void handle_buttons(unsigned char button_number) {
   };
 }
 
+ISR(INT0_vect) {
+  unsigned char button_number = number_key_pressed();
+  handle_buttons(button_number);
+}
+
 //Инициализация таймера
 void timer_init() {
-	TIMSK |= (1 << TOIE0);
+	TIMSK |= (1 << TOIE0) | (1 << TOIE1) | (1 << TOIE2);
 	TCCR0 = (1 << CS02);
+  TCCR1B = (1 << CS12) | (1 << CS10);
+  // TCNT1 = 32768;
 }
 
 void init() {
@@ -73,15 +103,31 @@ void init() {
   // cli();
 }
 
+
 int main(void) {
   init();
   ds1621_init();
+  EEOpen();
   DDRD |= (1 << PD5) | (1 << PD6) | (1 << PD7);
   PORTD |= (1 << PD5) | (1 << PD6) | (1 << PD7);
 	while(1) {
-    // handle_buttons();
-    signed char temp = getTemperature();
-		_delay_ms(1);
+    if (should_update_temp) {
+      signed int temp = getTemperature();
+      sprintf(display, "%4d", temp);
+      should_update_temp = 0;
+    }
+
+    if (state == TURBO) {
+      signed int temp = getTemperature();
+
+      if (EEWriteByte(address, temp) == 0 ) {
+        strcpy(display, "0001");
+      }
+      address++;
+      sprintf(display, "%4d", temp);
+    }
+
+    _delay_ms(1);
 	}
 	return 0;
 }
