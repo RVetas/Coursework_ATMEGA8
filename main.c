@@ -3,6 +3,9 @@
 #include "button_handler.h"
 #include "i2c_routines.h"
 #include "24c64.h"
+#include "uart.h"
+
+// Подключение стандартных библиотек
 #include <avr/io.h>
 #include <util/delay.h>
 #include <avr/interrupt.h>
@@ -66,7 +69,8 @@ void handle_buttons(unsigned char button_number) {
 
     case 1:
     strcpy(display, "1111");
-    state = Transmit;
+    UART_println("TRANSMIT BUTTON CLICKED");
+    state = Register;
     break;
 
     case 2:
@@ -108,6 +112,7 @@ int main(void) {
   init();
   ds1621_init();
   EEOpen();
+  USART_init(UBRR);
   DDRD |= (1 << PD5) | (1 << PD6) | (1 << PD7);
   PORTD |= (1 << PD5) | (1 << PD6) | (1 << PD7);
 	while(1) {
@@ -125,8 +130,11 @@ int main(void) {
       }
       address++;
       sprintf(display, "%4d", temp);
+      char str[30];
+      sprintf(str, "current temperature: %4d", temp);
+      UART_println(str);
     }
-
+    // UART_println("Hello, USER");
     _delay_ms(1);
 	}
 	return 0;
