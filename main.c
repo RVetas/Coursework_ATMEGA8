@@ -20,7 +20,8 @@ int timer1_divider = 0; //timer1 divider
 unsigned int address = 0; // eeprom write address
 int timer_temp_divider = 0;
 int should_update_temp = 1;
-
+signed int temp = 0;
+int error;
 //Настройка портов
 void set_up_ports(void) {
   //Эти пины настроены на вывод. Вывод идет на A,B,C,D,E,F 7-сегментного индикатора
@@ -125,15 +126,14 @@ int main(void) {
   PORTD |= (1 << PD5) | (1 << PD6) | (1 << PD7);
 	while(1) {
     if (should_update_temp) {
-      signed int temp = getTemperature();
+      temp = getTemperature();
       sprintf(display, "%4d", temp);
       should_update_temp = 0;
     }
 
     if (state == TURBO) {
-      signed int temp = getTemperature();
-
-      if (EEWriteByte(address, temp) == 0 ) {
+      temp = getTemperature();
+      if ((error = EEWriteByte(address, temp)) == 0 ) {
         strcpy(display, "0001");
       }
 

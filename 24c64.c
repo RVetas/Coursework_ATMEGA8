@@ -39,17 +39,17 @@ uint8_t EEWriteByte(uint16_t address,uint8_t data)
 		
 
 	//Now write ADDRH
-	TWDR=(address>>8);
+	// TWDR=(address>>8);
 
 	//Initiate Transfer
-	TWCR=(1<<TWINT)|(1<<TWEN);
+	// TWCR=(1<<TWINT)|(1<<TWEN);
 
 	//Poll Till Done
-	while(!(TWCR & (1<<TWINT)));
+	// while(!(TWCR & (1<<TWINT)));
 
 	//Check status
-	if((TWSR & 0xF8) != 0x28)
-		return FALSE;
+	// if((TWSR & 0xF8) != 0x28)
+		// return FALSE;
 
 	//Now write ADDRL
 	TWDR=(address);
