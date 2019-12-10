@@ -197,8 +197,3 @@ uint8_t EEReadByte(uint16_t address)
 	//Return TRUE
 	return data;
 }
-
-
-		
-
-

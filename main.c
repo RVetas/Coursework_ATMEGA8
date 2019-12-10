@@ -17,9 +17,10 @@ enum State {
 enum State state = Register;
 
 int timer1_divider = 0; //timer1 divider
-unsigned int address = 0; // eeprom start address
+unsigned int address = 0; // eeprom write address
 int timer_temp_divider = 0;
 int should_update_temp = 1;
+
 //Настройка портов
 void set_up_ports(void) {
   //Эти пины настроены на вывод. Вывод идет на A,B,C,D,E,F 7-сегментного индикатора
@@ -50,7 +51,7 @@ ISR(TIMER1_OVF_vect) {
     }
   }
 
-  if (timer_temp_divider < 4) {
+  if (timer_temp_divider < 3) {
     timer_temp_divider++;
   } else {
     should_update_temp = 1;
@@ -58,23 +59,31 @@ ISR(TIMER1_OVF_vect) {
   }
 }
 
+void transmit_data() {
+  UART_println("TRANSMITION START");
+  for (unsigned int i = 0; i < address; i++) {
+    signed char data = EEReadByte(i);
+    char *string_to_transmit = "Data #    : temp =     ";
+    sprintf(string_to_transmit, "Data #%4d: temp = %4d", data);
+    UART_println(string_to_transmit);
+  }
+  UART_println("TRANSMITION END");
+}
+
 void handle_buttons(unsigned char button_number) {
   // unsigned char button_number = number_key_pressed();
 
   switch (button_number) {
     case 0:
-    strcpy(display, "0000");
     state = Register;
     break;
 
     case 1:
-    strcpy(display, "1111");
-    UART_println("TRANSMIT BUTTON CLICKED");
+    transmit_data();
     state = Register;
     break;
 
     case 2:
-    strcpy(display, "2222");
     state = TURBO;
     break;
 
@@ -93,7 +102,6 @@ void timer_init() {
 	TIMSK |= (1 << TOIE0) | (1 << TOIE1) | (1 << TOIE2);
 	TCCR0 = (1 << CS02);
   TCCR1B = (1 << CS12) | (1 << CS10);
-  // TCNT1 = 32768;
 }
 
 void init() {
@@ -128,13 +136,13 @@ int main(void) {
       if (EEWriteByte(address, temp) == 0 ) {
         strcpy(display, "0001");
       }
+
       address++;
       sprintf(display, "%4d", temp);
       char str[30];
       sprintf(str, "current temperature: %4d", temp);
       UART_println(str);
     }
-    // UART_println("Hello, USER");
     _delay_ms(1);
 	}
 	return 0;

@@ -1,8 +1,9 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes'?>
 <WORKSPACE>
  <FRAME activewindow="0">
-  <PLACEMENT>2c00000000000000010000000083ffff0083ffffffffffffffffffffe9010000b5000000b708000061050000</PLACEMENT>
+  <PLACEMENT>2c0000000200000003000000ffffffffffffffffffffffffffffffff0700000004000000d9020000a9020000</PLACEMENT>
   <WINDOW type="default" module="ISIS"/>
+  <WINDOW type="default" module="DXP"/>
  </FRAME>
  <MODULE name="VSMDEBUG">
   <PWI>
@@ -48,7 +49,7 @@
      <ITEM name="VSplitter1Pos">238</ITEM>
     </PROPERTIES>
    </POPUP>
-   <POPUP w="450" x="312" flags="00000022" y="209" h="250" pid="0" iid="9">
+   <POPUP w="450" x="95" flags="00000023" y="566" h="250" pid="0" iid="9">
     <PROPERTIES>
      <ITEM name="AutoEcho">0</ITEM>
      <ITEM name="HexMode">0</ITEM>
@@ -117,9 +118,9 @@
      <ITEM name="TopLineAddress">00000020</ITEM>
     </PROPERTIES>
    </POPUP>
-   <POPUP w="600" x="419" flags="0000002b" y="901" h="399" pid="1" iid="2">
+   <POPUP w="600" x="73" flags="0000802b" y="836" h="399" pid="1" iid="2">
     <PROPERTIES>
-     <ITEM name="Breakpoint 0">"handle_buttons",01FC,000C,5FF0,8D5E,1
+     <ITEM name="Breakpoint 0">"transmit_data",0206,001E,F438,8D5E,1
 </ITEM>
      <ITEM name="Breakpoint 1">"main",02EC,0046,B26A,8D5E,1
 </ITEM>
@@ -137,7 +138,7 @@
      <ITEM name="DISPOPCODES">No</ITEM>
      <ITEM name="FIXUPBPTS">Yes</ITEM>
      <ITEM name="WordsOnly">No</ITEM>
-     <ITEM name="nBreakpoints">0</ITEM>
+     <ITEM name="nBreakpoints">1</ITEM>
     </PROPERTIES>
    </POPUP>
    <POPUP w="300" x="238" flags="0000000b" y="873" h="247" pid="2" iid="2">
@@ -160,11 +161,11 @@
    <POPUP w="40" x="512" flags="00000008" y="409" h="4" pid="1" iid="3">
     <PROPERTIES/>
    </POPUP>
-   <POPUP w="16" x="930" flags="0000000b" y="768" h="16" pid="101" iid="4">
+   <POPUP w="12" x="692" flags="0000000b" y="1101" h="16" pid="101" iid="4">
     <PROPERTIES>
      <ITEM name="DataType">2</ITEM>
      <ITEM name="DispChars">Yes</ITEM>
-     <ITEM name="DispFormat">2</ITEM>
+     <ITEM name="DispFormat">3</ITEM>
      <ITEM name="ShowChanges">Yes</ITEM>
      <ITEM name="ShowToolTips">Yes</ITEM>
      <ITEM name="TopLineAddress">00000000</ITEM>
