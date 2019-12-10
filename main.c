@@ -65,7 +65,7 @@ void transmit_data() {
   for (unsigned int i = 0; i < address; i++) {
     signed char data = EEReadByte(i);
     char *string_to_transmit = "Data #    : temp =     ";
-    sprintf(string_to_transmit, "Data #%4d: temp = %4d", data);
+    sprintf(string_to_transmit, "Data #%4d: temp = %4d", i, data);
     UART_println(string_to_transmit);
   }
   UART_println("TRANSMITION END");

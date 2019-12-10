@@ -121,18 +121,18 @@ uint8_t EEReadByte(uint16_t address)
 	}while((TWSR & 0xF8) != 0x18);
 		
 
-	//Now write ADDRH
-	TWDR=(address>>8);
+	// //Now write ADDRH
+	// TWDR=(address>>8);
 
-	//Initiate Transfer
-	TWCR=(1<<TWINT)|(1<<TWEN);
+	// //Initiate Transfer
+	// TWCR=(1<<TWINT)|(1<<TWEN);
 
-	//Poll Till Done
-	while(!(TWCR & (1<<TWINT)));
+	// //Poll Till Done
+	// while(!(TWCR & (1<<TWINT)));
 
-	//Check status
-	if((TWSR & 0xF8) != 0x28)
-		return FALSE;
+	// //Check status
+	// if((TWSR & 0xF8) != 0x28)
+	// 	return FALSE;
 
 	//Now write ADDRL
 	TWDR=(address);
@@ -186,7 +186,7 @@ uint8_t EEReadByte(uint16_t address)
 		return FALSE;
 
 	//Read the data
-	data=TWDR;
+	data=(TWDR);
 
 	//Put Stop Condition on bus
 	TWCR=(1<<TWINT)|(1<<TWEN)|(1<<TWSTO);
